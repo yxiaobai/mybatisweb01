@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fz.mapper.AddressMapper">
+    <resultMap id="aa" type="address">
+        <id column="aid" property="aid"/>
+        <result property="aname" column="aname"/>
+        <result property="aphone" column="aphone"/>
+    </resultMap>
+
+    <!--model里面的字段名和数据库不一致时需要 resultMap关联-->
+    <select id="queryById" parameterType="int" resultMap="aa">
+
+    <!--<select id="queryById"  resultType="address">-->
+        select * from db_address where aid = #{id};
+    </select>
+
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fz.mapper.MemberMapper">
+<resultMap id="mem" type="member">
+    <id column="id" property="id" />
+    <result property="accout" column="accout"/>
+    <result property="mpass" column="mpass"/>
+    <result property="mname" column="mname"/>
+    <association property="address" javaType="Address">
+        <id column="aid" property="aid"/>
+        <result property="aname" column="aname"/>
+        <result property="aphone" column="aphone"/>
+    </association>
+</resultMap>
+    <resultMap id="m2" type="member">
+        <id column="id" property="id" />
+        <result property="accout" column="accout"/>
+        <result property="mpass" column="mpass"/>
+        <result property="mname" column="mname"/>
+        <!--           Member 里面的字段名              -->
+        <result property="address.aid" column="aid"/>
+        <result property="address.aname" column="aname"/>
+        <result property="address.aphone" column="aphone"/>
+    </resultMap>
+
+
+    <resultMap id="aaa" type="address">
+        <result property="aid" column="aid"/>
+        <result property="aname" column="aname"/>
+        <result property="aphone" column="aphone"/>
+    </resultMap>
+    <resultMap id="m3" type="member">
+        <id column="id" property="id" />
+        <result property="accout" column="accout"/>
+        <result property="mpass" column="mpass"/>
+        <result property="mname" column="mname"/>
+        <association property="address" column="aid" resultMap="aaa"/>
+        <!--<association property="address" column="aid" javaType="address"/>-->
+    </resultMap>
+
+
+    <resultMap id="m4" type="member">
+        <id column="id" property="id"/>
+        <result property="accout" column="accout"/>
+        <result property="mpass" column="mpass"/>
+        <result property="mname" column="mname"/>
+       <association property="address" column="aid" select="com.fz.mapper.AddressMapper.queryById"/>
+    </resultMap>
+    <resultMap id="m5" type="member">
+        <id column="id" property="id"/>
+        <result property="accout" column="accout"/>
+        <result property="mpass" column="mpass"/>
+        <result property="mname" column="mname"/>
+        <association property="address" column="aid" select="com.fz.mapper.AddressMapper.queryById"/>
+        <collection property="orders" column="oid" ofType="order">
+            <id property="oid" column="oid"/>
+            <result property="ono" column="ono"/>
+            <result property="omoney" column="omoney"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="queryById" resultMap="m4" parameterType="int">
+        select * from db_member m ,db_address a where id = #{id} and m.aid=a.aid
+    </select>
+
+    <select id="findById" resultMap="m5" parameterType="int">
+        select * from db_member m ,db_order o where id = #{id} and o.omid=m.id
+    </select>
+    <select id="query" resultType="HashMap">
+        select m.mname,a.aname from db_member m ,db_address a where m.aid=a.aid
+    </select>
+
+    <select id="queryAll" resultType="HashMap">
+        select m.mname,a.aname from db_member m  LEFT JOIN db_address a on m.aid=a.aid
+    </select>
+
+</mapper>
